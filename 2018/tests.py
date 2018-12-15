@@ -7,7 +7,7 @@ class TestDay1Part1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.solver = staticmethod(getattr(import_module("adventofcode.day1"), 'solve_part1'))
+        cls.solver = staticmethod(getattr(import_module('adventofcode.day1'), 'solve_part1'))
 
     def test_positive(self):
         self.assertEqual(self.solver(StringIO("+1\n+1\n+1\n")), 3)
@@ -23,7 +23,7 @@ class TestDay1Part2(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.solver = staticmethod(getattr(import_module("adventofcode.day1"), 'solve_part2'))
+        cls.solver = staticmethod(getattr(import_module('adventofcode.day1'), 'solve_part2'))
 
     def test_1(self):
         self.assertEqual(self.solver(StringIO("+1\n-1\n")), 0)
@@ -42,19 +42,39 @@ class TestDay2Part1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.solver = staticmethod(getattr(import_module("adventofcode.day2"), 'solve_part1'))
+        cls.solver = staticmethod(getattr(import_module('adventofcode.day2'), 'solve_part1'))
 
     def test_1(self):
         self.assertEqual(self.solver(StringIO(
             "\n".join(
-                ["abcdef",
-                 "bababc",
-                 "abbcde",
-                 "abcccd",
-                 "aabcdd",
-                 "abcdee",
-                 "ababab"])
-             )), 12
+                ['abcdef',
+                 'bababc',
+                 'abbcde',
+                 'abcccd',
+                 'aabcdd',
+                 'abcdee',
+                 'ababab'])
+            )), 12
+        )
+
+
+class TestDay2Part2(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.solver = staticmethod(getattr(import_module('adventofcode.day2'), 'solve_part2'))
+
+    def test_1(self):
+        self.assertEqual(self.solver(StringIO(
+            "\n".join(
+                ['abcde',
+                 'fghij',
+                 'klmno',
+                 'pqrst',
+                 'fguij',
+                 'axcye',
+                 'wvxyz'])
+            )), 'fgij'
         )
 
 
