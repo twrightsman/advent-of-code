@@ -1,0 +1,7 @@
+[package]
+name = "aoc2019"
+version = "0.1.0"
+authors = ["Travis Wrightsman <tw493@cornell.edu>"]
+edition = "2018"
+
+[dependencies]
