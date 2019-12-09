@@ -18,3 +18,11 @@ fn day1_part2_full() {
 
     assert_eq!(aoc2019::day1_part2(reader).unwrap(), 5209504);
 }
+
+#[test]
+fn day2_part1_full() {
+    let file = File::open("inputs/day2.txt");
+    let reader = Box::new(io::BufReader::new(file.unwrap()));
+
+    assert_eq!(aoc2019::day2_part1(reader).unwrap()[0], 2890696);
+}
