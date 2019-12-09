@@ -24,5 +24,13 @@ fn day2_part1_full() {
     let file = File::open("inputs/day2.txt");
     let reader = Box::new(io::BufReader::new(file.unwrap()));
 
-    assert_eq!(aoc2019::day2_part1(reader).unwrap()[0], 2890696);
+    assert_eq!(aoc2019::day2_part1(reader).unwrap(), 2890696);
+}
+
+#[test]
+fn day2_part2_full() {
+    let file = File::open("inputs/day2.txt");
+    let reader = Box::new(io::BufReader::new(file.unwrap()));
+
+    assert_eq!(aoc2019::day2_part2(reader).unwrap(), 8226);
 }
