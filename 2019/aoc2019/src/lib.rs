@@ -57,6 +57,12 @@ pub fn day3_part1(input: Box<dyn BufRead>) -> Result<u32, &'static str> {
     Ok(day3::closest_intersection(&wires[0], &wires[1]))
 }
 
+pub fn day3_part2(input: Box<dyn BufRead>) -> Result<u32, &'static str> {
+    let wires: Vec<String> = input.lines().map(|l| {l.unwrap()}).collect();
+
+    Ok(day3::fewest_steps(&wires[0], &wires[1]))
+}
+
 pub mod day1 {
     pub fn mass_to_fuel(mass: i32) -> i32 {
         (((mass as f32) / 3.0).floor() as i32) - 2
@@ -201,7 +207,7 @@ pub mod day3 {
         points
     }
 
-    pub fn wire_intersects(wire1: Vec<Point>, wire2: Vec<Point>) -> Vec<Point> {
+    pub fn wire_intersects(wire1: &Vec<Point>, wire2: &Vec<Point>) -> Vec<Point> {
         let mut points = HashMap::new();
 
         for (p1, p2) in wire1.iter().zip(wire2.iter()) {
@@ -221,11 +227,38 @@ pub mod day3 {
         u32::try_from((p1.x - p2.x).abs() + (p1.y - p2.y).abs()).unwrap()
     }
 
+    pub fn steps_to_point(p: Point, wire: &Vec<Point>) -> Result<u32, &'static str> {
+        // find first occurance of p in wire
+        let mut i = 1; // start at one to include origin
+        for point in wire.iter() {
+            if *point == p {
+                return Ok(i)
+            }
+            i += 1;
+        }
+
+        Err("Couldn't find point in wire")
+    }
+
+    pub fn fewest_steps(wire1_str: &str, wire2_str: &str) -> u32 {
+        let wire1_points = wire_points(parse_wire_string(wire1_str).unwrap());
+        let wire2_points = wire_points(parse_wire_string(wire2_str).unwrap());
+        let mut intersects = wire_intersects(
+            &wire1_points,
+            &wire2_points
+        );
+
+        intersects.sort_by(|a, b| {
+            (steps_to_point(*a, &wire1_points).unwrap() + steps_to_point(*a, &wire2_points).unwrap()).partial_cmp(&(steps_to_point(*b, &wire1_points).unwrap() + steps_to_point(*b, &wire2_points).unwrap())).unwrap()});
+
+        steps_to_point(intersects[0], &wire1_points).unwrap() + steps_to_point(intersects[0], &wire2_points).unwrap()
+    }
+
     pub fn closest_intersection(wire1_str: &str, wire2_str: &str) -> u32 {
         let ctrl_port = Point{x: 0, y: 0};
         let mut intersects = wire_intersects(
-            wire_points(parse_wire_string(wire1_str).unwrap()),
-            wire_points(parse_wire_string(wire2_str).unwrap())
+            &wire_points(parse_wire_string(wire1_str).unwrap()),
+            &wire_points(parse_wire_string(wire2_str).unwrap())
         );
         intersects.sort_by(|a, b| {manhattan_distance(ctrl_port, *a).partial_cmp(&manhattan_distance(ctrl_port, *b)).unwrap()});
 
