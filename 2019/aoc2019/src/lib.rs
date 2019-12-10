@@ -106,3 +106,122 @@ pub mod day2 {
         }
     }
 }
+
+pub mod day3 {
+    use std::collections::HashMap;
+    use std::convert::TryFrom;
+
+    #[derive(Debug, PartialEq)]
+    pub enum WireInstr {
+        Up(u32),
+        Down(u32),
+        Right(u32),
+        Left(u32)
+    }
+
+    #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+    pub struct Point {
+        pub x: i32,
+        pub y: i32
+    }
+
+    impl WireInstr {
+        pub fn new(instr_str: &str) -> Result<Self, String> {
+            let mut instr_str_chars = instr_str.chars();
+            let dir_str = instr_str_chars.next().unwrap();
+            let dist: u32 = instr_str_chars.collect::<String>().parse().unwrap();
+
+            if dir_str == 'U' {
+                return Ok(Self::Up(dist))
+            } else if dir_str == 'D' {
+                return Ok(Self::Down(dist))
+            } else if dir_str == 'R' {
+                return Ok(Self::Right(dist))
+            } else if dir_str == 'L' {
+                return Ok(Self::Left(dist))
+            } else {
+                return Err(format!("Invalid direction: {}", dir_str))
+            }
+        }
+    }
+
+    pub fn parse_wire_string(wire: &str) -> Result<Vec<WireInstr>, &'static str> {
+        let result = wire.split(',')
+            .map(|instr_str| {
+                WireInstr::new(instr_str).unwrap()
+            })
+            .collect();
+
+        Ok(result)
+    }
+
+    pub fn wire_points(wire: Vec<WireInstr>) -> Vec<Point> {
+        let mut points: Vec<Point> = vec![];
+        let mut grid_pos = Point{x: 0, y: 0};
+
+        for instr in wire.iter() {
+            match instr {
+                WireInstr::Up(dist) => {
+                    let new_y = grid_pos.y + i32::try_from(*dist).unwrap();
+                    for y in (grid_pos.y + 1)..=new_y {
+                        points.push(Point{x: grid_pos.x, y: y})
+                    }
+                    grid_pos.y = new_y;
+                },
+                WireInstr::Down(dist) => {
+                    let new_y = grid_pos.y - i32::try_from(*dist).unwrap();
+                    for y in (new_y..grid_pos.y).rev() {
+                        points.push(Point{x: grid_pos.x, y: y})
+                    }
+                    grid_pos.y = new_y;
+                },
+                WireInstr::Right(dist) => {
+                    let new_x = grid_pos.x + i32::try_from(*dist).unwrap();
+                    for x in (grid_pos.x + 1)..=new_x {
+                        points.push(Point{x: x, y: grid_pos.y})
+                    }
+                    grid_pos.x = new_x;
+                },
+                WireInstr::Left(dist) => {
+                    let new_x = grid_pos.x - i32::try_from(*dist).unwrap();
+                    for x in (new_x..grid_pos.x).rev() {
+                        points.push(Point{x: x, y: grid_pos.y})
+                    }
+                    grid_pos.x = new_x;
+                }
+            }
+        }
+
+        points
+    }
+
+    pub fn wire_intersects(wire1: Vec<Point>, wire2: Vec<Point>) -> Vec<Point> {
+        let mut points = HashMap::new();
+
+        for point in wire1.iter().chain(wire2.iter()) {
+            *points.entry(point).or_insert(0) += 1;
+        }
+
+        let mut intersections: Vec<Point> = vec![];
+        for (&key, &_value) in points.iter().filter(|(&_k, &v)| {v > 1}) {
+            intersections.push(*key);
+        }
+
+        intersections
+    }
+
+    pub fn manhattan_distance(p1: Point, p2: Point) -> u32 {
+        u32::try_from((p1.x - p2.x).abs() + (p1.y - p2.y).abs()).unwrap()
+    }
+
+    pub fn closest_intersection(wire1_str: &str, wire2_str: &str) -> u32 {
+        let ctrl_port = Point{x: 0, y: 0};
+        let mut intersects = wire_intersects(
+            wire_points(parse_wire_string(wire1_str).unwrap()),
+            wire_points(parse_wire_string(wire2_str).unwrap())
+        );
+        intersects.sort_by(|a, b| {manhattan_distance(ctrl_port, *a).partial_cmp(&manhattan_distance(ctrl_port, *b)).unwrap()});
+
+        manhattan_distance(ctrl_port, intersects[0])
+    }
+}
