@@ -51,6 +51,12 @@ pub fn day2_part2(input: Box<dyn BufRead>) -> Result<i32, &'static str> {
     Err("Couldn't find the magic noun/verb combination")
 }
 
+pub fn day3_part1(input: Box<dyn BufRead>) -> Result<u32, &'static str> {
+    let wires: Vec<String> = input.lines().map(|l| {l.unwrap()}).collect();
+
+    Ok(day3::closest_intersection(&wires[0], &wires[1]))
+}
+
 pub mod day1 {
     pub fn mass_to_fuel(mass: i32) -> i32 {
         (((mass as f32) / 3.0).floor() as i32) - 2
@@ -198,12 +204,13 @@ pub mod day3 {
     pub fn wire_intersects(wire1: Vec<Point>, wire2: Vec<Point>) -> Vec<Point> {
         let mut points = HashMap::new();
 
-        for point in wire1.iter().chain(wire2.iter()) {
-            *points.entry(point).or_insert(0) += 1;
+        for (p1, p2) in wire1.iter().zip(wire2.iter()) {
+            points.entry(p1).or_insert([0, 0])[0] += 1;
+            points.entry(p2).or_insert([0, 0])[1] += 1;
         }
 
         let mut intersections: Vec<Point> = vec![];
-        for (&key, &_value) in points.iter().filter(|(&_k, &v)| {v > 1}) {
+        for (&key, &_value) in points.iter().filter(|(&_k, &v)| {(v[0] > 0) && (v[1] > 0)}) {
             intersections.push(*key);
         }
 
