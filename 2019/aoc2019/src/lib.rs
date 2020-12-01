@@ -9,7 +9,7 @@ pub fn day1_part1(input: Box<dyn BufRead>) -> Result<i32, Box<dyn Error>> {
             day1::mass_to_fuel(line.unwrap().parse::<i32>().unwrap())
         })
         .sum();
-    
+
     Ok(result)
 }
 
@@ -19,7 +19,7 @@ pub fn day1_part2(input: Box<dyn BufRead>) -> Result<i32, Box<dyn Error>> {
             day1::mass_to_total_fuel(line.unwrap().parse::<i32>().unwrap())
         })
         .sum();
-    
+
     Ok(result)
 }
 

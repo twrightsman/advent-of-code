@@ -5,7 +5,7 @@ fn day1_part1_simple() {
     assert_eq!(aoc2019::day1::mass_to_fuel(12), 2);
     assert_eq!(aoc2019::day1::mass_to_fuel(14), 2);
     assert_eq!(aoc2019::day1::mass_to_fuel(1969), 654);
-    assert_eq!(aoc2019::day1::mass_to_fuel(100756), 33583)
+    assert_eq!(aoc2019::day1::mass_to_fuel(100756), 33583);
 }
 
 #[test]
