@@ -3,7 +3,7 @@ import unittest
 
 from aoc.day1 import day1_part1, day1_part2
 from aoc.day2 import day2_part1, day2_part2
-from aoc.day3 import day3_part1
+from aoc.day3 import day3_part1, day3_part2
 
 
 class SmallTest(unittest.TestCase):
@@ -38,4 +38,7 @@ class SmallTest(unittest.TestCase):
 
     def test_day3_part1_small(self):
         self.assertEqual(day3_part1(self.day3_map), "7")
+
+    def test_day3_part2_small(self):
+        self.assertEqual(day3_part2(self.day3_map), "336")
 
